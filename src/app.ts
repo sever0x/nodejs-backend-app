@@ -2,6 +2,9 @@ import config from './config';
 import express from 'express';
 import log4js, { Configuration } from 'log4js';
 import Consul, { ConsulOptions } from 'consul';
+import * as mongoose from "mongoose";
+import {ConnectOptions} from "mongoose";
+import routers from "./routers";
 
 type EnvType = 'dev' | 'prod';
 
@@ -47,13 +50,20 @@ export default async () => {
         next();
     });
 
-    // app.use('/', routers);
+    app.use('/', routers);
 
     const port = await getConsulValue(`${env}/port`) as number;
     const address = await getConsulValue(`${env}/address`) as string;
     app.listen(port, address, () => {
         log4js.getLogger().info(`NodeJS backend listening on port ${address}:${port}`);
     });
+
+    const mongoAddress = await getConsulValue(`${env}/mongo.address`) as string;
+    await mongoose.connect(mongoAddress, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        socketTimeoutMS: 30000,
+    } as ConnectOptions);
 
     return app;
 }
