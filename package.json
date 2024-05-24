@@ -1,0 +1,47 @@
+{
+  "name": "nodejs-backend-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node ./dist/index.js",
+    "build": "npx tsc",
+    "devel": "set NODE_ENV=dev && nodemon --exec ts-node -r tsconfig-paths/register ./src/index.ts",
+    "test": "mocha --timeout 30000 --exit -r ts-node/register -r tsconfig-paths/register src/test/**/*.test.ts",
+    "coverage": "nyc npm run test"
+  },
+  "_moduleAliases": {
+    "src": "dist"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 80
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "consul": "^1.2.0",
+    "express": "^4.19.2",
+    "log4js": "^6.9.1",
+    "mongoose": "^8.4.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.16",
+    "@types/consul": "^0.40.3",
+    "@types/express": "^4.17.21",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.12",
+    "@types/sinon": "^17.0.3",
+    "chai": "^5.1.1",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.4.0",
+    "module-alias": "^2.2.3",
+    "mongodb-memory-server": "^9.2.0",
+    "nodemon": "^3.1.0",
+    "nyc": "^15.1.0",
+    "sinon": "^18.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
