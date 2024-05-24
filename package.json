@@ -23,8 +23,9 @@
   "dependencies": {
     "consul": "^1.2.0",
     "express": "^4.19.2",
+    "http-status": "^1.7.4",
     "log4js": "^6.9.1",
-    "mongoose": "^8.4.0"
+    "mongoose": "^7.0.4"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",

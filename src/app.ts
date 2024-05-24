@@ -66,4 +66,4 @@ export default async () => {
     } as ConnectOptions);
 
     return app;
-}
+};
