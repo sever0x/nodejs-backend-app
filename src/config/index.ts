@@ -35,6 +35,12 @@ const config = {
             },
         },
     },
+    backendExternal: {
+        url: 'http://localhost:8080',
+        mapping: {
+            song: '/api/song',
+        }
+    }
 };
 
 export default config;
