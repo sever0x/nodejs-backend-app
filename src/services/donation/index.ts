@@ -1,6 +1,8 @@
 import {DonationSaveDto} from "src/dto/donation/donationSaveDto";
-import Donation from "src/model/donation";
+import Donation, {IDonation} from "src/model/donation";
 import config from "../../config";
+import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
+import {DonationDetailsDto} from "../../dto/donation/donationDetailsDto";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -12,7 +14,42 @@ export const createDonationRecord = async (
     return donation._id;
 }
 
-export const validateDonationRequest = async (donationDto: DonationSaveDto) => {
+
+export const getDonationsBySongId = async (
+    query: DonationQueryDto
+): Promise<DonationDetailsDto[]> => {
+    const songIdString = query.songId;
+    if (!songIdString) {
+        throw new Error(`SongId is required`);
+    }
+
+    const songId = parseInt(songIdString, 10);
+    if (isNaN(songId)) {
+        throw new Error(`SongId must be a valid number`);
+    }
+
+    const donations = await Donation
+        .find({
+            ...(songId && { songId }),
+        })
+        .sort({ timestamp: -1 })
+        .skip(query.from)
+        .limit(query.size);
+
+    return donations.map(donation => toDetailsDto(donation));
+}
+
+const toDetailsDto = (donation: IDonation): DonationDetailsDto => {
+    return ({
+        _id: donation._id,
+        songId: donation.songId,
+        donorName: donation.donor.name,
+        amount: donation.amount,
+        timestamp: donation.timestamp,
+    });
+};
+
+const validateDonationRequest = async (donationDto: DonationSaveDto) => {
     const { donor, songId, amount } = donationDto;
 
     if (donor?.name == null || donor?.name === '') {

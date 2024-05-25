@@ -1,8 +1,7 @@
-import {Donor} from "../donor/donor";
-
 export interface DonationDetailsDto {
+    _id: string,
     songId: number;
-    donor: Donor;
+    donorName: string;
     amount: number;
     timestamp: Date;
 }
