@@ -3,6 +3,6 @@ import donation from "./donation";
 
 const router = express.Router();
 
-router.use('/donation', donation);
+router.use('/api/donation', donation);
 
 export default router;

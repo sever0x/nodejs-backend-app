@@ -3,6 +3,7 @@ import Donation, {IDonation} from "src/model/donation";
 import config from "../../config";
 import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
 import {DonationDetailsDto} from "../../dto/donation/donationDetailsDto";
+import {DonationCountsDto} from "../../dto/donation/donationCountsDto";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -37,6 +38,21 @@ export const getDonationsBySongId = async (
         .limit(query.size);
 
     return donations.map(donation => toDetailsDto(donation));
+}
+
+export const countDonationsBySongsIds = async (
+    donationDto: DonationCountsDto
+): Promise<Record<number, number>> => {
+    const { songIds } = donationDto;
+    const result = await Donation.aggregate([
+        { $match: { songId: { $in: songIds } } },
+        { $group: { _id: "$songId", count: { $sum: 1 } } },
+    ]);
+
+    return result.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+    }, {});
 }
 
 const toDetailsDto = (donation: IDonation): DonationDetailsDto => {
