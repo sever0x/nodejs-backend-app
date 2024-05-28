@@ -1,9 +1,9 @@
 import {DonationSaveDto} from "../../dto/donation/donationSaveDto";
 import Donation, {IDonation} from "../../model/donation";
-import config from "../../config";
 import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
 import {DonationDetailsDto} from "../../dto/donation/donationDetailsDto";
 import {DonationCountsDto} from "../../dto/donation/donationCountsDto";
+import {validateSongExists} from "../../client";
 
 export const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -82,27 +82,5 @@ export const validateDonationRequest = async (donationDto: DonationSaveDto) => {
 
     if (amount && amount <= 0) {
         throw new Error(`Amount can't be equal to or less than 0`);
-    }
-};
-
-export const validateSongExists = async (songId: number) => {
-    try {
-        const response = await fetch(`${config.backendExternal.url}${config.backendExternal.mapping.song}/${songId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-            }
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-        }
-
-        return await response.json();
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Unable to verify song existence: ${error.message}`);
-        }
     }
 };

@@ -73,9 +73,8 @@ describe('Donation Service', () => {
             .catch((error: Error) => done(error));
     });
 
-    //todo need mock
     it('createDonation should create a new donation and return its id', (done) => {
-        // const validateDonationRequestStub = sandbox.stub(donationService, 'validateDonationRequest');
+        const validateDonationRequestStub = sandbox.stub(donationService, 'validateDonationRequest');
         const donationDto: DonationSaveDto = {
             songId: donation1.songId,
             amount: donation1.amount,
@@ -87,9 +86,9 @@ describe('Donation Service', () => {
 
         donationService.createDonationRecord(donationDto)
             .then(async (id) => {
-                // sandbox.assert.calledOnce(validateDonationRequestStub);
-                // const validationArgs = validateDonationRequestStub.getCall(0).args;
-                // expect(validationArgs[0]).to.eql(donation1);
+                sandbox.assert.calledOnce(validateDonationRequestStub);
+                const validationArgs = validateDonationRequestStub.getCall(0).args;
+                expect(validationArgs[0]).to.eql(donation1);
 
                 const donation = await Donation.findById(id);
 
