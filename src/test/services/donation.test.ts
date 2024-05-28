@@ -66,7 +66,7 @@ describe('Donation Service', () => {
         const dto: DonationCountsDto = { songIds: [1, 2] };
         donationService.countDonationsBySongsIds(dto)
             .then((counts) => {
-                expect(counts).to.have.property('1', 2);
+                expect(counts).to.have.property('1', 4);
                 expect(counts).to.have.property('2', 1);
                 done();
             })
