@@ -1,11 +1,11 @@
-import {DonationSaveDto} from "src/dto/donation/donationSaveDto";
-import Donation, {IDonation} from "src/model/donation";
+import {DonationSaveDto} from "../../dto/donation/donationSaveDto";
+import Donation, {IDonation} from "../../model/donation";
 import config from "../../config";
 import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
 import {DonationDetailsDto} from "../../dto/donation/donationDetailsDto";
 import {DonationCountsDto} from "../../dto/donation/donationCountsDto";
 
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+export const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export const createDonationRecord = async (
     donationDto: DonationSaveDto
@@ -14,7 +14,6 @@ export const createDonationRecord = async (
     const donation = await new Donation(donationDto).save();
     return donation._id;
 }
-
 
 export const getDonationsBySongId = async (
     query: DonationQueryDto
@@ -65,7 +64,7 @@ const toDetailsDto = (donation: IDonation): DonationDetailsDto => {
     });
 };
 
-const validateDonationRequest = async (donationDto: DonationSaveDto) => {
+export const validateDonationRequest = async (donationDto: DonationSaveDto) => {
     const { donor, songId, amount } = donationDto;
 
     if (donor?.name == null || donor?.name === '') {
@@ -86,7 +85,7 @@ const validateDonationRequest = async (donationDto: DonationSaveDto) => {
     }
 };
 
-const validateSongExists = async (songId: number) => {
+export const validateSongExists = async (songId: number) => {
     try {
         const response = await fetch(`${config.backendExternal.url}${config.backendExternal.mapping.song}/${songId}`, {
             method: 'GET',
