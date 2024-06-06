@@ -10,7 +10,7 @@ services:
     networks:
       - app-network
     environment:
-      - NODE_ENV=prod
+      - NODE_ENV=dev
   db:
     image: mongo:5.0.14
     ports:

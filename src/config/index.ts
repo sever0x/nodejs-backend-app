@@ -40,7 +40,12 @@ const config = {
         mapping: {
             song: '/api/song',
         }
-    }
+    },
+    kafka: {
+        clientId: 'nodejs-backend-app',
+        brokers: ['localhost:9092'],
+        topic: 'email-service'
+    },
 };
 
 export default config;

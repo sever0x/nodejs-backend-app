@@ -10,6 +10,7 @@ import {InternalError} from "../../system/internalError";
 import log4js from "log4js";
 import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
 import {DonationCountsDto} from "../../dto/donation/donationCountsDto";
+import {sendMessage} from "../../producer";
 
 export const saveDonation = async (req: Request, res: Response) => {
     try {
@@ -17,6 +18,14 @@ export const saveDonation = async (req: Request, res: Response) => {
         const id = await createDonationRecordApi({
             ...donation,
         });
+
+        const emailMessage = {
+            subject: 'New Donation',
+            content: `Thank you for your donation of ${donation.amount}`,
+            recipients: [donation.donor?.email]
+        };
+        await sendMessage(emailMessage);
+
         res.status(httpStatus.CREATED).send({
             id,
         });
