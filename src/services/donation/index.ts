@@ -9,10 +9,10 @@ export const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export const createDonationRecord = async (
     donationDto: DonationSaveDto
-): Promise<string> => {
+): Promise<DonationDetailsDto> => {
     await validateDonationRequest(donationDto);
     const donation = await new Donation(donationDto).save();
-    return donation._id;
+    return toDetailsDto(donation);
 }
 
 export const getDonationsBySongId = async (

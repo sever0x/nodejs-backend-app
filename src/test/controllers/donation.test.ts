@@ -97,7 +97,7 @@ describe('Donation controller', () => {
             .send({...donation})
             .end((_, res) => {
                 res.should.have.status(201);
-                expect(res.body.id).to.equal(donationIdAfterSave.toString());
+                expect(res.body._id).to.equal(donationIdAfterSave.toString());
 
                 done();
             });

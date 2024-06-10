@@ -11,24 +11,27 @@ import log4js from "log4js";
 import {DonationQueryDto} from "../../dto/donation/donationQueryDto";
 import {DonationCountsDto} from "../../dto/donation/donationCountsDto";
 import {sendMessage} from "../../producer";
+import {DONATION_EMAIL_TEMPLATE} from "../../templates";
 
 export const saveDonation = async (req: Request, res: Response) => {
     try {
         const donation = new DonationSaveDto(req.body);
-        const id = await createDonationRecordApi({
+        const donationDetails = await createDonationRecordApi({
             ...donation,
         });
 
         const emailMessage = {
             subject: 'New Donation',
-            content: `Thank you for your donation of ${donation.amount}`,
+            content: DONATION_EMAIL_TEMPLATE
+                .replace('{donorName}', donationDetails.donorName)
+                .replace('{donationAmount}', donationDetails.amount.toString())
+                .replace('{songId}', donationDetails.songId.toString())
+                .replace('{donorEmail}', donation.donor?.email ?? ''),
             recipients: [donation.donor?.email]
         };
         await sendMessage(emailMessage);
 
-        res.status(httpStatus.CREATED).send({
-            id,
-        });
+        res.status(httpStatus.CREATED).send(donationDetails);
     } catch (err) {
         const { message, status } = new InternalError(err);
         log4js.getLogger().error('Error in creating donation record', err);

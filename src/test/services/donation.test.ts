@@ -73,7 +73,7 @@ describe('Donation Service', () => {
             .catch((error: Error) => done(error));
     });
 
-    it('createDonation should create a new donation and return its id', (done) => {
+    it('createDonation should create a new donation and return its donation details', (done) => {
         const validateDonationRequestStub = sandbox.stub(donationService, 'validateDonationRequest');
         const donationDto: DonationSaveDto = {
             songId: donation1.songId,
@@ -85,12 +85,12 @@ describe('Donation Service', () => {
         };
 
         donationService.createDonationRecord(donationDto)
-            .then(async (id) => {
+            .then(async (donationDetails) => {
                 sandbox.assert.calledOnce(validateDonationRequestStub);
                 const validationArgs = validateDonationRequestStub.getCall(0).args;
                 expect(validationArgs[0]).to.eql(donation1);
 
-                const donation = await Donation.findById(id);
+                const donation = await Donation.findById(donationDetails._id);
 
                 expect(donation).to.exist;
                 expect(donation?.songId).to.equal(donationDto.songId);
